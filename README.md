@@ -36,100 +36,120 @@ Blur ramitha.png with a few smoothing filters, then sharpen it and run a Laplaci
 
 ## Program
 
-#### 1. Read the photo
+#### 1.
 
 ```python
 import cv2
-import numpy as np
 import matplotlib.pyplot as plt
-
-bgr = cv2.imread("ramitha.png")
-img = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
-
-def beside(changed, title, gray=False):
-    plt.figure(figsize=(8, 4))
-    plt.subplot(1, 2, 1)
-    if gray:
-        plt.imshow(changed[0], cmap="gray")
-    else:
-        plt.imshow(img)
-    plt.title("Original")
-    plt.axis("off")
-    plt.subplot(1, 2, 2)
-    if gray:
-        plt.imshow(changed[1], cmap="gray")
-    else:
-        plt.imshow(changed)
-    plt.title(title)
-    plt.axis("off")
-    plt.show()
+import numpy as np
+image1=cv2.imread("ramitha.png")
+image2=cv2.cvtColor(image1,cv2.COLOR_BGR2RGB)
+kernel=np.ones((11,11),np.float32)/169
+image3=cv2.filter2D(image2,-1,kernel)
+plt.figure(figsize=(9,9))
+plt.subplot(1,2,1)
+plt.imshow(image2)
+plt.title("Original Image")
+plt.axis("off")
+plt.subplot(1,2,2)
+plt.imshow(image3)
+plt.title("Average Filter Image")
+plt.axis("off")
+plt.show()
 ```
 
-#### 2. Average filter
+#### 2.
 
 ```python
-beside(cv2.blur(img, (7, 7)), "Average")
+kernel1=np.array([[1,2,1],[2,4,2],[1,2,1]])/16
+image2=cv2.cvtColor(image1,cv2.COLOR_BGR2RGB)
+image3=cv2.filter2D(image2,-1,kernel1)
+plt.subplot(1,2,1)
+plt.imshow(image2)
+plt.title("Original Image")
+plt.axis("off")
+plt.subplot(1,2,2)
+plt.imshow(image3)
+plt.title("Weighted Average Filter Image")
+plt.axis("off")
+plt.show()
 ```
 
-#### 3. Weighted average
+#### 3.
 
 ```python
-weights = np.array([[1, 2, 1], [2, 4, 2], [1, 2, 1]], np.float32) / 16
-beside(cv2.filter2D(img, -1, weights), "Weighted average")
+gaussian_blur=cv2.GaussianBlur(image2,(33,33),0,0)
+plt.subplot(1,2,1)
+plt.imshow(image2)
+plt.title("Original Image")
+plt.axis("off")
+plt.subplot(1,2,2)
+plt.imshow(gaussian_blur)
+plt.title("Gaussian Blur")
+plt.axis("off")
+plt.show()
 ```
 
-#### 4. Gaussian blur
+#### 4.
 
 ```python
-beside(cv2.GaussianBlur(img, (9, 9), 0), "Gaussian")
+median=cv2.medianBlur(image2,13)
+plt.figure(figsize=(9,9))
+plt.subplot(1,2,1)
+plt.imshow(image2)
+plt.title("Original Image")
+plt.axis("off")
+plt.subplot(1,2,2)
+plt.imshow(median)
+plt.title("Median Blur")
+plt.axis("off")
+plt.show()
 ```
 
-#### 5. Median filter
+#### 5.
 
 ```python
-beside(cv2.medianBlur(img, 7), "Median")
+kernel2=np.array([[-1,-1,-1],[2,-2,1],[2,1,-1]])
+image3=cv2.filter2D(image2,-1,kernel2)
+plt.subplot(1,2,1)
+plt.imshow(image2)
+plt.title("Original Image")
+plt.axis("off")
+plt.subplot(1,2,2)
+plt.imshow(image3)
+plt.title("Laplacian Kernel")
+plt.axis("off")
+plt.show()
 ```
 
-#### 6. Sharpen
+#### 6.
 
 ```python
-sharp = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]], np.float32)
-beside(cv2.filter2D(img, -1, sharp), "Sharpen")
-```
-
-#### 7. Laplacian on grayscale
-
-```python
-gray = cv2.cvtColor(bgr, cv2.COLOR_BGR2GRAY)
-lap = cv2.convertScaleAbs(cv2.Laplacian(gray, cv2.CV_64F))
-beside((gray, lap), "Laplacian", gray=True)
+laplacian=cv2.Laplacian(image2,cv2.CV_64F)
+plt.subplot(1,2,1)
+plt.imshow(image2)
+plt.title("Original Image")
+plt.axis("off")
+plt.subplot(1,2,2)
+plt.imshow(laplacian)
+plt.title("Laplacian Operator")
+plt.axis("off")
+plt.show()
 ```
 
 ## Output
 
-### i) Average
+<img width="717" height="358" alt="Average Filter Image" src="output/01-average.png" />
 
-<img width="639" height="323" alt="Average" src="output/01-average.png" />
+<img width="717" height="358" alt="Weighted Average Filter Image" src="output/02-weighted.png" />
 
-### ii) Weighted average
+<img width="717" height="358" alt="Gaussian Blur" src="output/03-gaussian.png" />
 
-<img width="639" height="323" alt="Weighted average" src="output/02-weighted.png" />
+<img width="717" height="358" alt="Median Blur" src="output/04-median.png" />
 
-### iii) Gaussian
+<img width="717" height="358" alt="Laplacian Kernel" src="output/05-laplacian-kernel.png" />
 
-<img width="639" height="323" alt="Gaussian" src="output/03-gaussian.png" />
-
-### iv) Median
-
-<img width="639" height="323" alt="Median" src="output/04-median.png" />
-
-### v) Sharpen
-
-<img width="639" height="323" alt="Sharpen" src="output/05-sharpen.png" />
-
-### vi) Laplacian
-
-<img width="639" height="323" alt="Laplacian" src="output/06-laplacian.png" />
+<img width="717" height="358" alt="Laplacian Operator" src="output/06-laplacian.png" />
 
 ## Result
 
